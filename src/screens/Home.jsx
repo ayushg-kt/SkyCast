@@ -9,29 +9,26 @@ import {
   ActivityIndicator,
   ScrollView,
 } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { setSearchedCities } from '../redux/weatherSlice';
+import { useSelector } from 'react-redux';
 import { searchCities } from '../api';
 import styles from '../styles/HomeStyles';
 import { getWeatherIcon, formatTemperature } from '../utils';
 
 const Home = ({ navigation }) => {
-  const dispatch = useDispatch();
-  const { searchedCities, favorites, temperatureUnit } = useSelector(
-    state => state.weather,
-  );
+  const { favorites, temperatureUnit } = useSelector(state => state.weather);
   const [searchText, setSearchText] = useState('');
   const [loading, setLoading] = useState(false);
+  const [searchedCities, setSearchedCities] = useState([]);
 
   const handleSearch = async text => {
     setSearchText(text);
     if (text.trim().length <= 1) {
-      dispatch(setSearchedCities([]));
+      setSearchedCities([]);
       return;
     }
     setLoading(true);
     const cities = await searchCities(text);
-    dispatch(setSearchedCities(cities));
+    setSearchedCities(cities);
     setLoading(false);
   };
 
