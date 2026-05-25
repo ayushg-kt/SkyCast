@@ -26,7 +26,7 @@ const Details = ({ route, navigation }) => {
     state => state.weather,
   );
   const [weatherData, setWeatherData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('Today');
   const isFavorite = favorites.some(item => item.id === city.id);
 
@@ -54,7 +54,7 @@ const Details = ({ route, navigation }) => {
     }
   };
 
-  if (loading) {
+  if (loading || !weatherData) {
     return (
       <View style={styles.loaderContainer}>
         <ActivityIndicator size="large" />

@@ -10,21 +10,18 @@ import {
   ScrollView,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  setSearchedCities,
-  setSelectedCity,
-  setLoading,
-} from '../redux/weatherSlice';
+import { setSearchedCities } from '../redux/weatherSlice';
 import { searchCities } from '../api';
 import styles from '../styles/HomeStyles';
 import { getWeatherIcon, formatTemperature } from '../utils';
 
 const Home = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { searchedCities, favorites, loading, temperatureUnit } = useSelector(
+  const { searchedCities, favorites, temperatureUnit } = useSelector(
     state => state.weather,
   );
   const [searchText, setSearchText] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSearch = async text => {
     setSearchText(text);
@@ -32,18 +29,16 @@ const Home = ({ navigation }) => {
       dispatch(setSearchedCities([]));
       return;
     }
-    dispatch(setLoading(true));
+    setLoading(true);
     const cities = await searchCities(text);
     dispatch(setSearchedCities(cities));
-    dispatch(setLoading(false));
+    setLoading(false);
   };
 
-  const handleCityPress = city => {
-    dispatch(setSelectedCity(city));
+  const handleCityPress = city =>
     navigation.navigate('Details', {
       city,
     });
-  };
 
   const renderSearchItem = ({ item }) => {
     return (

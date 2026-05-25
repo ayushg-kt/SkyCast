@@ -2,11 +2,9 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   searchedCities: [],
-  selectedCity: null,
   favorites: [],
   temperatureUnit: 'C',
   windSpeedUnit: 'km/h',
-  loading: false,
 };
 
 const weatherSlice = createSlice({
@@ -15,9 +13,6 @@ const weatherSlice = createSlice({
   reducers: {
     setSearchedCities: (state, action) => {
       state.searchedCities = action.payload;
-    },
-    setSelectedCity: (state, action) => {
-      state.selectedCity = action.payload;
     },
     addFavorite: (state, action) => {
       state.favorites.push(action.payload);
@@ -33,20 +28,15 @@ const weatherSlice = createSlice({
     setWindSpeedUnit: (state, action) => {
       state.windSpeedUnit = action.payload;
     },
-    setLoading: (state, action) => {
-      state.loading = action.payload;
-    },
   },
 });
 
 export const {
   setSearchedCities,
-  setSelectedCity,
   addFavorite,
   removeFavorite,
   setTemperatureUnit,
   setWindSpeedUnit,
-  setLoading,
 } = weatherSlice.actions;
 
 export default weatherSlice.reducer;
