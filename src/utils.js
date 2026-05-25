@@ -1,0 +1,22 @@
+export const getWeatherIcon = weatherCode => {
+  if (weatherCode === 0) return require('../assets/sun.png');
+  if (weatherCode >= 1 && weatherCode <= 3)
+    return require('../assets/cloudSun.png');
+  return require('../assets/cloud.png');
+};
+
+export const getWeatherText = code => {
+  if (code === 0) return 'Clear Sky';
+  if (code >= 1 && code <= 3) return 'Partly Cloudy';
+  return 'Cloudy';
+};
+
+export const formatTemperature = (temp, unit) => {
+  if (unit === 'C') return `${temp}°${unit}`;
+  return `${(temp * 9) / 5 + 32}°${unit}`;
+};
+
+export const formatSpeed = (speed, unit) => {
+  if (unit === 'km/h') return `${speed} ${unit}`;
+  return `${(speed * 0.621371).toFixed(1)} ${unit}`;
+};
