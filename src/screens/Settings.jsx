@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setTemperatureUnit, setWindSpeedUnit } from '../redux/weatherSlice';
 import styles from '../styles/SettingsStyles';
 
-const Settings = ({ navigation }) => {
+const Settings = () => {
   const dispatch = useDispatch();
   const { temperatureUnit, windSpeedUnit } = useSelector(
     state => state.weather,
