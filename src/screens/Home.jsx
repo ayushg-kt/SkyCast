@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import {
   View,
   Text,
@@ -12,25 +12,44 @@ import {
 import { useSelector } from 'react-redux';
 import { searchCities } from '../api';
 import styles from '../styles/HomeStyles';
-import { getWeatherIcon, formatTemperature } from '../utils';
+import { getWeatherIcon, formatTemperature, debounce } from '../utils';
+import { Search } from '../../assets/Search';
+import { useFocusEffect } from '@react-navigation/native';
 
 const Home = ({ navigation }) => {
   const { favorites, temperatureUnit } = useSelector(state => state.weather);
   const [searchText, setSearchText] = useState('');
   const [loading, setLoading] = useState(false);
   const [searchedCities, setSearchedCities] = useState([]);
-
-  const handleSearch = async text => {
-    setSearchText(text);
-    if (text.trim().length <= 1) {
+  useFocusEffect(
+    useCallback(() => {
+      setSearchText('');
       setSearchedCities([]);
-      return;
-    }
-    setLoading(true);
-    const cities = await searchCities(text);
-    setSearchedCities(cities);
-    setLoading(false);
-  };
+    }, []),
+  );
+
+  const debouncedSearch = useMemo(
+    () =>
+      debounce(async text => {
+        setLoading(true);
+        const cities = await searchCities(text);
+        setSearchedCities(cities);
+        setLoading(false);
+      }, 500),
+    [],
+  );
+
+  const handleSearch = useCallback(
+    text => {
+      setSearchText(text);
+      if (text.trim().length < 2) {
+        setSearchedCities([]);
+        return;
+      }
+      debouncedSearch(text);
+    },
+    [debouncedSearch],
+  );
 
   const handleCityPress = city =>
     navigation.navigate('Details', {
@@ -87,10 +106,7 @@ const Home = ({ navigation }) => {
         </TouchableOpacity>
       </View>
       <View style={styles.searchContainer}>
-        <Image
-          source={require('../../assets/search.png')}
-          style={styles.searchIcon}
-        />
+        <Search />
         <TextInput
           placeholder="Search city or place..."
           placeholderTextColor="#888"

@@ -15,6 +15,7 @@ import {
   formatSpeed,
   getWeatherIcon,
   getWeatherText,
+  Tabs,
 } from '../utils';
 import { useEffect, useState } from 'react';
 import styles from '../styles/DetailsStyles';
@@ -27,7 +28,7 @@ const Details = ({ route, navigation }) => {
   );
   const [weatherData, setWeatherData] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState('Today');
+  const [activeTab, setActiveTab] = useState(1);
   const isFavorite = favorites.some(item => item.id === city.id);
 
   useEffect(() => {
@@ -144,60 +145,29 @@ const Details = ({ route, navigation }) => {
       </View>
 
       <View style={styles.tabsContainer}>
-        <TouchableOpacity
-          style={[
-            styles.tabButton,
-            activeTab === 'Today' && styles.activeTabButton,
-          ]}
-          onPress={() => setActiveTab('Today')}
-        >
-          <Text
+        {Object.entries(Tabs).map(([key, value]) => (
+          <TouchableOpacity
+            key={key}
             style={[
-              styles.tabText,
-              activeTab === 'Today' && styles.activeTabText,
+              styles.tabButton,
+              activeTab === Number(key) && styles.activeTabButton,
             ]}
+            onPress={() => setActiveTab(Number(key))}
           >
-            Today
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[
-            styles.tabButton,
-            activeTab === 'Hourly' && styles.activeTabButton,
-          ]}
-          onPress={() => setActiveTab('Hourly')}
-        >
-          <Text
-            style={[
-              styles.tabText,
-              activeTab === 'Hourly' && styles.activeTabText,
-              styles.hourlyTabText,
-            ]}
-          >
-            Hourly
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[
-            styles.tabButton,
-            activeTab === 'Daily' && styles.activeTabButton,
-          ]}
-          onPress={() => setActiveTab('Daily')}
-        >
-          <Text
-            style={[
-              styles.tabText,
-              activeTab === 'Daily' && styles.activeTabText,
-            ]}
-          >
-            Daily
-          </Text>
-        </TouchableOpacity>
+            <Text
+              style={[
+                styles.tabText,
+                activeTab === Number(key) && styles.activeTabText,
+                value === 'Hourly' && styles.hourlyTabText,
+              ]}
+            >
+              {value}
+            </Text>
+          </TouchableOpacity>
+        ))}
       </View>
 
-      {activeTab === 'Today' && (
+      {activeTab === 1 && (
         <>
           <View style={styles.todayContainer}>
             <View style={styles.todayCard}>
@@ -242,7 +212,7 @@ const Details = ({ route, navigation }) => {
         </>
       )}
 
-      {activeTab === 'Hourly' && (
+      {activeTab === 2 && (
         <FlatList
           data={weatherData.hourly.time.slice(0, 12)}
           horizontal
@@ -266,7 +236,7 @@ const Details = ({ route, navigation }) => {
         />
       )}
 
-      {activeTab === 'Daily' && (
+      {activeTab === 3 && (
         <View style={styles.dailyContainer}>
           {weatherData.daily.time.slice(0, 7).map((day, index) => (
             <View key={index} style={styles.dailyCard}>
